@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETCH VALLEY - Harvest Sketch Pad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+
+</head>
+<body>
+  <!-- subtle scanlines / paper texture overlay -->
+  <div class="paper-texture"></div>
+
+  <header class="top-bar">
+    <div class="header-wood">
+      <div class="header-nails"><span></span><span></span><span></span><span></span></div>
+      <div class="header-left">
+        <div class="logo-pixel">
+          <div class="pixel-sun"></div>
+          <div class="pixel-field">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="title-wrap">
+          <h1>ETCH VALLEY</h1>
+          <p>ETCH-A-SKETCH PAD &nbsp;-&nbsp; v1.0 &nbsp;-&nbsp; DRAW PIXELS</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="score-box">
+          <span class="score-label">FIELD SIZE</span>
+          <span id="size-display" class="score-value">16 x 16</span>
+        </div>
+        <div class="score-box small-hide">
+          <span class="score-label">Auth</span>
+          <span class="score-value">PLOTO★</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-tassels">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <main class="game-shell">
+    <!-- LEFT TOOL SHELF -->
+    <aside class="tool-shelf">
+      <div class="shelf-label">TOOL SHED</div>
+
+      <div class="wood-sign">
+        <div class="sign-nail"></div>
+        <p>hold click<br>& drag to till!</p>
+      </div>
+
+      <div class="controls">
+        <button id="new-grid-btn" class="btn btn-primary">
+          <span class="btn-icon">▭</span> NEW FIELD
+        </button>
+
+        <div class="btn-row">
+          <button id="clear-btn" class="btn btn-wood">CLEAR</button>
+          <button id="eraser-btn" class="btn btn-wood">ERASER</button>
+        </div>
+
+        <div class="mode-group">
+          <div class="pencil-row">
+            <button id="mode-classic" class="btn btn-mode active" data-mode="classic">
+              <i></i> PENCIL
+            </button>
+            <label class="color-pick" title="Pick pencil color">
+              <input type="color" id="pencil-color" value="#2b1d12">
+              <span class="color-swatch" id="color-swatch"></span>
+            </label>
+          </div>
+          <button id="mode-rainbow" class="btn btn-mode" data-mode="rainbow">
+            <i></i> RAINBOW SEEDS
+          </button>
+        </div>
+
+
+
+        <div class="slider-wrap">
+          <div class="slider-head">
+            <span>FIELD DENSITY</span>
+            <span id="slider-value">16</span>
+          </div>
+          <input type="range" id="size-slider" min="4" max="100" value="16">
+          <div class="slider-ticks"><span>4</span><span>100</span></div>
+        </div>
+      </div>
+
+      <div class="shelf-footer">
+        <div class="pixel-crops">
+          <span class="crop c1"></span>
+          <span class="crop c2"></span>
+          <span class="crop c3"></span>
+          <span class="crop c4"></span>
+        </div>
+        <p class="hint">TIP: Hold <b>LEFT CLICK</b><br>and drag - no hover<br>paint! Like a real<br>etch-a-sketch!</p>
+      </div>
+    </aside>
+
+    <!-- CENTER CANVAS FRAME -->
+    <section class="canvas-area">
+      <div class="canvas-frame">
+        <div class="frame-top">
+          <div class="nail"></div>
+          <div class="frame-title">
+            <span class="dot"></span>
+            <span id="frame-title-text">FIELD - 16 x 16 - 256 TILES</span>
+            <span class="dot"></span>
+          </div>
+          <div class="nail"></div>
+        </div>
+
+        <div id="container" class="container"></div>
+
+        <div class="frame-bottom">
+          <span>◀ TILL LEFT TO RIGHT ▶</span>
+          <span class="frame-coords" id="coords">x: -- y: --</span>
+        </div>
+      </div>
+
+      <div class="ground-shadow"></div>
+
+      <div class="bottom-planks">
+        <span>MADE WITH SOIL & PIXELS</span>
+        <span class="plank-nails">● &nbsp; ● &nbsp; ●</span>
+        <span>© 2026 FearThePLOTO for The Odin Project</span>
+      </div>
+    </section>
+
+    <!-- RIGHT INFO SHELF (desktop only) -->
+    <aside class="info-shelf">
+      <div class="pixel-farmer" aria-hidden="true">
+        <div class="farmer-hat"></div>
+        <div class="farmer-face"></div>
+        <div class="farmer-body"></div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- custom modal instead of raw prompt for retro feel (still supports prompt fallback) -->
+  <div id="field-modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">RE-PLOW FIELD</div>
+      <p>How many tiles per side?<br><small>(4 - 100)</small></p>
+      <input type="number" id="modal-input" min="4" max="100" value="16">
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn btn-wood">CANCEL</button>
+        <button id="modal-confirm" class="btn btn-primary">PLOW IT!</button>
+      </div>
+      <p id="modal-error" class="modal-error"></p>
+    </div>
+  </div>
+
+</body>
+</html>
